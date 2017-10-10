@@ -45,11 +45,13 @@ function gateKeeper(req, res, next) {
   const headerUserPass = req.get('x-username-and-password');
   //  2. parses values sent for `user` and `pass` from 'x-username-and-password'
   const parsedUserPass = (queryString.parse(headerUserPass));
+  const user = parsedUserPass.user || null;
+  const pass = parsedUserPass.pass || null;
   //  3. looks for a user object matching the sent username and password values
   //  4. if matching user found, add the user object to the request object
   //     (aka, `req.user = matchedUser`)
   req.user = USERS.find(user => {
-    return user['userName'] === parsedUserPass.user;
+    return user['userName'] === parsedUserPass.user && user['password'] === parsedUserPass.password;
   });
   next();
 }
