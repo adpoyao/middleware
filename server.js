@@ -43,10 +43,8 @@ const USERS = [
 function gateKeeper(req, res, next) {
   //  1. looks for a 'x-username-and-password' request header
   const headerUserPass = req.get('x-username-and-password');
-  console.log(headerUserPass);
   //  2. parses values sent for `user` and `pass` from 'x-username-and-password'
   const parsedUserPass = (queryString.parse(headerUserPass));
-  console.log(parsedUserPass);
   //  3. looks for a user object matching the sent username and password values
   //  4. if matching user found, add the user object to the request object
   //     (aka, `req.user = matchedUser`)
@@ -56,8 +54,9 @@ function gateKeeper(req, res, next) {
   next();
 }
 
+app.use(gateKeeper);
 
-app.get('/api/users/me', gateKeeper, (req, res) => {
+app.get('/api/users/me', (req, res) => {
   // send an error message if no or wrong credentials sent
   if (req.user === undefined) {
     return res.status(403).json({message: 'Must supply valid user credentials'});
